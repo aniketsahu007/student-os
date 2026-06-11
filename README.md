@@ -225,11 +225,6 @@ Contributions are welcome! Please open an issue first to discuss what you'd like
 4. Push to the branch: `git push origin feature/my-feature`
 5. Open a Pull Request
 
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
 ---
 
