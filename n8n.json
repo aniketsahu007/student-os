@@ -1,0 +1,225 @@
+{
+  "name": "Student Life OS - AI Command Router",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "student-os-command",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body;\nconst command = (body.command || '').toLowerCase().trim();\nconst userId = body.userId || 'anonymous';\nconst timestamp = new Date().toISOString();\n\nlet intent = 'unknown';\n\nif (/add|schedule|class|lesson|lecture|monday|tuesday|wednesday|thursday|friday|saturday|sunday|[0-9]+\\s*[ap]m/i.test(command)) {\n  intent = 'schedule';\n} else if (/task|todo|submit|assignment|remind|deadline/i.test(command)) {\n  intent = 'task';\n} else if (/remind|reminder|alert|notify/i.test(command)) {\n  intent = 'reminder';\n} else if (/log|spend|budget|money|₹|rs\\.|paid|bought|expense/i.test(command)) {\n  intent = 'budget';\n} else if (/habit|streak|done|mark|morning|run|meditat|reading|hydration/i.test(command)) {\n  intent = 'habit';\n} else if (/note|write|save|jot/i.test(command)) {\n  intent = 'note';\n} else if (/pomodoro|timer|focus|start timer|stop timer/i.test(command)) {\n  intent = 'pomodoro';\n} else if (/what|schedule|tomorrow|today|show|how many/i.test(command)) {\n  intent = 'query';\n}\n\nreturn [{ json: { command, userId, timestamp, intent } }];"
+      },
+      "id": "parse-intent",
+      "name": "Parse Intent",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            { "value1": "={{ $json.intent }}", "operation": "equals", "value2": "schedule" },
+            { "value1": "={{ $json.intent }}", "operation": "equals", "value2": "task" },
+            { "value1": "={{ $json.intent }}", "operation": "equals", "value2": "reminder" },
+            { "value1": "={{ $json.intent }}", "operation": "equals", "value2": "budget" },
+            { "value1": "={{ $json.intent }}", "operation": "equals", "value2": "habit" },
+            { "value1": "={{ $json.intent }}", "operation": "equals", "value2": "note" },
+            { "value1": "={{ $json.intent }}", "operation": "equals", "value2": "pomodoro" }
+          ]
+        }
+      },
+      "id": "intent-switch",
+      "name": "Route by Intent",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an AI assistant for a student productivity app. Extract structured data from the user's command and return ONLY valid JSON.\n\nFor schedule commands return: { \"action\": \"add\", \"title\": string, \"day\": string, \"time\": string, \"room\": string }\nFor task commands return: { \"action\": \"add\"|\"complete\", \"title\": string, \"due\": string, \"urgent\": boolean }\nFor reminder commands return: { \"action\": \"add\", \"title\": string, \"datetime\": string }\nFor budget commands return: { \"action\": \"log\", \"label\": string, \"amount\": number, \"type\": \"income\"|\"expense\" }\nFor habit commands return: { \"action\": \"mark_done\"|\"add\", \"name\": string }\nFor note commands return: { \"action\": \"save\", \"content\": string }\nFor pomodoro commands return: { \"action\": \"start\"|\"stop\", \"minutes\": number }\n\nOnly return raw JSON, nothing else."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.command }}"
+            }
+          ]
+        },
+        "options": { "temperature": 0 }
+      },
+      "id": "openai-extract",
+      "name": "OpenAI Extract Data",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [900, 240]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.message?.content || '{}';\nlet parsed;\ntry { parsed = JSON.parse(raw); } catch(e) { parsed = { error: 'parse_failed', raw }; }\nconst prev = $('Parse Intent').first().json;\nreturn [{ json: { ...prev, extracted: parsed } }];"
+      },
+      "id": "merge-extraction",
+      "name": "Merge Extraction",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 240]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "schedules",
+        "columns": "user_id, title, day, time, room, created_at",
+        "values": "={{ $json.userId }}, {{ $json.extracted.title }}, {{ $json.extracted.day }}, {{ $json.extracted.time }}, {{ $json.extracted.room }}, {{ $json.timestamp }}"
+      },
+      "id": "supabase-schedule",
+      "name": "Save to Schedules",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1340, 120]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "todos",
+        "columns": "user_id, title, due, urgent, created_at",
+        "values": "={{ $json.userId }}, {{ $json.extracted.title }}, {{ $json.extracted.due }}, {{ $json.extracted.urgent }}, {{ $json.timestamp }}"
+      },
+      "id": "supabase-task",
+      "name": "Save to Tasks",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1340, 240]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "reminders",
+        "columns": "user_id, title, remind_at, created_at",
+        "values": "={{ $json.userId }}, {{ $json.extracted.title }}, {{ $json.extracted.datetime }}, {{ $json.timestamp }}"
+      },
+      "id": "supabase-reminder",
+      "name": "Save to Reminders",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1340, 360]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "budget_entries",
+        "columns": "user_id, label, amount, type, created_at",
+        "values": "={{ $json.userId }}, {{ $json.extracted.label }}, {{ $json.extracted.amount }}, {{ $json.extracted.type }}, {{ $json.timestamp }}"
+      },
+      "id": "supabase-budget",
+      "name": "Save to Budget",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1340, 480]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "habits",
+        "columns": "user_id, name, done, date, created_at",
+        "values": "={{ $json.userId }}, {{ $json.extracted.name }}, true, {{ new Date().toISOString().split('T')[0] }}, {{ $json.timestamp }}"
+      },
+      "id": "supabase-habit",
+      "name": "Save to Habits",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1340, 600]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "notes",
+        "columns": "user_id, content, created_at",
+        "values": "={{ $json.userId }}, {{ $json.extracted.content }}, {{ $json.timestamp }}"
+      },
+      "id": "supabase-note",
+      "name": "Save to Notes",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1340, 720]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst intent = data.intent;\nconst ex = data.extracted || {};\nconst msgs = {\n  schedule: `✅ Class \"${ex.title}\" added for ${ex.day} at ${ex.time}`,\n  task: `✅ Task \"${ex.title}\" added. Due: ${ex.due}`,\n  reminder: `🔔 Reminder set for \"${ex.title}\" at ${ex.datetime}`,\n  budget: `💰 Logged ${ex.type === 'expense' ? '-' : '+'}₹${ex.amount} for ${ex.label}`,\n  habit: `🔥 Habit \"${ex.name}\" marked as done!`,\n  note: `📝 Note saved.`,\n  pomodoro: `⏱ Pomodoro ${ex.action === 'start' ? 'started' : 'stopped'} for ${ex.minutes || 25} min`,\n  unknown: `❓ I didn't quite understand that. Try something like: 'Add Maths every Monday 9am' or 'Log ₹150 for lunch'`\n};\nreturn [{ json: { reply: msgs[intent] || msgs.unknown, intent, extracted: ex } }];"
+      },
+      "id": "build-reply",
+      "name": "Build Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, reply: $json.reply, intent: $json.intent, data: $json.extracted }) }}",
+        "options": { "responseHeaders": { "entries": [{ "name": "Content-Type", "value": "application/json" }] } }
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1780, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": { "main": [[{ "node": "Parse Intent", "type": "main", "index": 0 }]] },
+    "Parse Intent": { "main": [[{ "node": "Route by Intent", "type": "main", "index": 0 }]] },
+    "Route by Intent": {
+      "main": [
+        [{ "node": "OpenAI Extract Data", "type": "main", "index": 0 }],
+        [{ "node": "OpenAI Extract Data", "type": "main", "index": 0 }],
+        [{ "node": "OpenAI Extract Data", "type": "main", "index": 0 }],
+        [{ "node": "OpenAI Extract Data", "type": "main", "index": 0 }],
+        [{ "node": "OpenAI Extract Data", "type": "main", "index": 0 }],
+        [{ "node": "OpenAI Extract Data", "type": "main", "index": 0 }],
+        [{ "node": "OpenAI Extract Data", "type": "main", "index": 0 }]
+      ]
+    },
+    "OpenAI Extract Data": { "main": [[{ "node": "Merge Extraction", "type": "main", "index": 0 }]] },
+    "Merge Extraction": {
+      "main": [
+        [
+          { "node": "Save to Schedules", "type": "main", "index": 0 },
+          { "node": "Save to Tasks", "type": "main", "index": 0 },
+          { "node": "Save to Reminders", "type": "main", "index": 0 },
+          { "node": "Save to Budget", "type": "main", "index": 0 },
+          { "node": "Save to Habits", "type": "main", "index": 0 },
+          { "node": "Save to Notes", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Save to Schedules": { "main": [[{ "node": "Build Reply", "type": "main", "index": 0 }]] },
+    "Save to Tasks": { "main": [[{ "node": "Build Reply", "type": "main", "index": 0 }]] },
+    "Save to Reminders": { "main": [[{ "node": "Build Reply", "type": "main", "index": 0 }]] },
+    "Save to Budget": { "main": [[{ "node": "Build Reply", "type": "main", "index": 0 }]] },
+    "Save to Habits": { "main": [[{ "node": "Build Reply", "type": "main", "index": 0 }]] },
+    "Save to Notes": { "main": [[{ "node": "Build Reply", "type": "main", "index": 0 }]] },
+    "Build Reply": { "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": ["student-os", "ai", "automation"]
+}

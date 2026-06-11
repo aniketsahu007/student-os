@@ -1,0 +1,197 @@
+/* ── Shared section layout ── */
+.wrap { 
+    padding: 2.5rem 2.5rem 0; 
+}
+.pageHead { 
+    margin-bottom: 2rem;
+}
+.pageLabel { 
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.4rem; 
+}
+.pageTitle { 
+    font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 900; letter-spacing: -0.04em; color: var(--text-hero); line-height: 1; 
+}
+.pageSub { 
+    font-size: 0.875rem; color: var(--text-body); margin-top: 0.4rem; 
+}
+.pageActions { 
+    display: flex; 
+    gap: 0.75rem; 
+    margin-top: 1.25rem; 
+    align-items: center; 
+}
+
+/* ── Card base ── */
+.card { 
+    background: var(--bg-layer); 
+    border: 1px solid var(--line-faint); 
+    border-radius: var(--r-lg); 
+    transition: border-color 0.2s; 
+}
+.card:hover { 
+    border-color: var(--line-soft); 
+}
+.cardPad { 
+    padding: 1.4rem 1.6rem; 
+}
+.cardHead { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    margin-bottom: 1.25rem; 
+}
+.cardLabel { 
+    font-size: 0.6rem; 
+    font-weight: 700; 
+    letter-spacing: 0.12em; 
+    text-transform: uppercase; 
+    color: var(--text-dim); 
+}
+.cardTitle { 
+    font-size: 0.95rem; 
+    font-weight: 700; 
+    color: var(--text-hero); 
+    letter-spacing: -0.025em; 
+}
+.accentLine { 
+    height: 1px; 
+}
+
+/* ── Layout helpers ── */
+.twoCol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1rem; }
+.threeCol { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+/* ── Inline add bar ── */
+.addBar { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+.addInput { flex: 1; background: var(--bg-raised); border: 1px solid var(--line-soft); border-radius: var(--r-sm); padding: 0.55rem 0.9rem; color: var(--text-hero); font-size: 0.85rem; outline: none; font-family: inherit; transition: border-color 0.15s; }
+.addInput:focus { border-color: var(--accent); }
+.addInput::placeholder { color: var(--text-dim); }
+.addBtn { background: var(--accent); color: #fff; border: none; border-radius: var(--r-sm); padding: 0 1rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: opacity 0.15s, box-shadow 0.15s; box-shadow: 0 0 14px var(--accent-glow); }
+.addBtn:hover { opacity: 0.88; }
+.addBtnSm { background: var(--bg-raised); color: var(--text-body); border: 1px solid var(--line-soft); border-radius: var(--r-sm); padding: 0.3rem 0.75rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+.addBtnSm:hover { color: var(--text-hero); border-color: var(--line-mid); }
+
+/* ── Filter tabs ── */
+.tabs { display: flex; gap: 0.35rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--line-faint); padding-bottom: 0.75rem; }
+.tab { font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: var(--r-pill); border: 1px solid transparent; background: transparent; color: var(--text-dim); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+.tab:hover { color: var(--text-body); }
+.tabActive { background: var(--accent-ghost); border-color: rgba(139,92,246,0.25); color: var(--accent-bright); }
+
+/* ── TODO items ── */
+.todoItem { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.65rem 0; border-bottom: 1px solid var(--line-faint); }
+.todoItem:last-child { border-bottom: none; }
+.todoCheckbox { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--line-mid); flex-shrink: 0; margin-top: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; background: transparent; color: transparent; }
+.todoCheckbox.done { border-color: var(--clr-emerald); background: var(--clr-emerald); color: white; font-size: 0.6rem; }
+.todoText { flex: 1; }
+.todoTitle { font-size: 0.85rem; font-weight: 500; color: var(--text-hero); letter-spacing: -0.01em; }
+.todoTitle.done { text-decoration: line-through; color: var(--text-dim); }
+.todoMeta { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
+.todoPriority { font-size: 0.62rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: var(--r-pill); text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0; }
+.todoDelete { opacity: 0; width: 20px; height: 20px; border: none; background: transparent; color: var(--text-dim); cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.15s; flex-shrink: 0; }
+.todoItem:hover .todoDelete { opacity: 1; }
+.todoDelete:hover { color: var(--clr-rose); background: rgba(251,113,133,0.08); }
+
+/* ── Calendar ── */
+.calWrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: 1.25rem; }
+.calHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.calMonthNav { display: flex; align-items: center; gap: 0.5rem; }
+.calMonth { font-size: 1rem; font-weight: 700; color: var(--text-hero); letter-spacing: -0.02em; }
+.calNavBtn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line-faint); background: transparent; color: var(--text-body); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-size: 0.8rem; }
+.calNavBtn:hover { border-color: var(--line-mid); color: var(--text-hero); }
+.calDaysHeader { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; margin-bottom: 4px; }
+.calDayName { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); text-align: center; padding: 4px 0; }
+.calGrid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
+.calCell { aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 4px 2px; cursor: pointer; transition: background 0.15s; position: relative; }
+.calCell:hover { background: rgba(255,255,255,0.04); }
+.calCellOther .calCellNum { color: var(--text-dim); opacity: 0.4; }
+.calCellToday .calCellNum { background: var(--accent); color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px var(--accent-glow); }
+.calCellSelected { background: var(--accent-ghost); }
+.calCellNum { font-size: 0.75rem; font-weight: 600; color: var(--text-hero); width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+.calDots { display: flex; gap: 2px; margin-top: 2px; }
+.calDot { width: 4px; height: 4px; border-radius: 50%; }
+.calEventList { display: flex; flex-direction: column; gap: 0.65rem; }
+.calEventItem { display: flex; align-items: center; gap: 0.875rem; padding: 0.75rem 0; border-bottom: 1px solid var(--line-faint); }
+.calEventItem:last-child { border-bottom: none; }
+.calEventBar { width: 2px; height: 36px; border-radius: 2px; flex-shrink: 0; }
+.calEventTime { font-size: 0.65rem; font-weight: 700; color: var(--text-dim); width: 50px; flex-shrink: 0; }
+.calEventTitle { font-size: 0.85rem; font-weight: 600; color: var(--text-hero); }
+.calEventRoom { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
+.calEmpty { text-align: center; padding: 2rem; color: var(--text-dim); font-size: 0.85rem; }
+
+/* ── Notes ── */
+.notesSplit { display: grid; grid-template-columns: 260px 1fr; gap: 1px; background: var(--line-faint); border-radius: var(--r-lg); overflow: hidden; min-height: 520px; }
+.notesList { background: var(--bg-layer); overflow-y: auto; }
+.notesListHead { padding: 1rem 1.2rem; border-bottom: 1px solid var(--line-faint); display: flex; align-items: center; justify-content: space-between; }
+.notesListTitle { font-size: 0.8rem; font-weight: 700; color: var(--text-hero); }
+.noteItem { padding: 0.85rem 1.2rem; border-bottom: 1px solid var(--line-faint); cursor: pointer; transition: background 0.15s; }
+.noteItem:hover { background: rgba(255,255,255,0.03); }
+.noteItemActive { background: var(--accent-ghost) !important; }
+.noteItemTitle { font-size: 0.82rem; font-weight: 600; color: var(--text-hero); }
+.noteItemPreview { font-size: 0.72rem; color: var(--text-dim); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.noteItemDate { font-size: 0.65rem; color: var(--text-dim); margin-top: 4px; }
+.notesEditor { background: var(--bg-surface); display: flex; flex-direction: column; }
+.notesEditorBar { padding: 0.875rem 1.4rem; border-bottom: 1px solid var(--line-faint); display: flex; align-items: center; gap: 0.75rem; }
+.notesTitleInput { flex: 1; background: transparent; border: none; outline: none; font-size: 1rem; font-weight: 700; color: var(--text-hero); font-family: inherit; }
+.notesTitleInput::placeholder { color: var(--text-dim); }
+.notesWordCount { font-size: 0.68rem; color: var(--text-dim); }
+.notesSaveBtn { background: var(--accent); color: white; border: none; border-radius: var(--r-sm); padding: 0.35rem 0.9rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; font-family: inherit; box-shadow: 0 0 12px var(--accent-glow); }
+.notesTextarea { flex: 1; background: transparent; border: none; outline: none; padding: 1.4rem; color: var(--text-body); font-size: 0.875rem; line-height: 1.75; font-family: 'JetBrains Mono', 'Fira Code', monospace; resize: none; min-height: 400px; }
+.notesTextarea::placeholder { color: var(--text-dim); }
+.notesEmpty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: 0.5rem; color: var(--text-dim); font-size: 0.85rem; }
+
+/* ── Budget ── */
+.budgetStats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 1.25rem; }
+.budgetStat { background: var(--bg-layer); border: 1px solid var(--line-faint); border-radius: var(--r-md); padding: 1.1rem 1.4rem; }
+.budgetStatLabel { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.35rem; }
+.budgetStatValue { font-size: 1.6rem; font-weight: 900; letter-spacing: -0.04em; line-height: 1; }
+.txList { display: flex; flex-direction: column; }
+.txItem { display: flex; align-items: center; gap: 0.875rem; padding: 0.65rem 0; border-bottom: 1px solid var(--line-faint); }
+.txItem:last-child { border-bottom: none; }
+.txEmoji { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+.txDetails { flex: 1; }
+.txName { font-size: 0.82rem; font-weight: 500; color: var(--text-hero); }
+.txDate { font-size: 0.7rem; color: var(--text-dim); margin-top: 1px; }
+.txAmt { font-size: 0.88rem; font-weight: 700; letter-spacing: -0.02em; }
+.catBar { margin-bottom: 0.85rem; }
+.catBarLabel { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-body); margin-bottom: 0.35rem; }
+.catBarTrack { height: 6px; background: var(--bg-raised); border-radius: 3px; overflow: hidden; }
+.catBarFill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+
+/* ── Habits ── */
+.habitHero { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+.habitHeroCard { flex: 1; background: var(--bg-layer); border: 1px solid var(--line-faint); border-radius: var(--r-md); padding: 1rem 1.4rem; }
+.habitHeroLabel { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.25rem; }
+.habitHeroValue { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.04em; color: var(--text-hero); line-height: 1; }
+.habitRow { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 0; border-bottom: 1px solid var(--line-faint); }
+.habitRow:last-child { border-bottom: none; }
+.habitRowName { flex: 1; font-size: 0.85rem; font-weight: 500; color: var(--text-hero); display: flex; align-items: center; gap: 0.5rem; }
+.habitDots7 { display: flex; gap: 4px; }
+.habitDot7 { width: 10px; height: 10px; border-radius: 50%; background: var(--bg-raised); border: 1px solid var(--line-soft); transition: all 0.15s; }
+.habitDot7.filled { background: var(--clr-emerald); border-color: var(--clr-emerald); }
+.habitToggle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line-mid); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: transparent; transition: all 0.2s; flex-shrink: 0; }
+.habitToggle.done { border-color: var(--clr-emerald); background: var(--clr-emerald); color: white; }
+.habitStreakBadge { font-size: 0.7rem; font-weight: 700; color: var(--clr-amber); min-width: 36px; text-align: right; }
+
+/* ── Pomodoro full page ── */
+.pomPage { display: flex; flex-direction: column; align-items: center; padding-top: 2rem; }
+.pomTabs { display: flex; gap: 0.5rem; margin-bottom: 2.5rem; }
+.pomTab { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.4rem 1rem; border-radius: var(--r-pill); border: 1px solid var(--line-faint); background: transparent; color: var(--text-dim); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+.pomTab:hover { color: var(--text-body); border-color: var(--line-soft); }
+.pomTabActive { background: rgba(255,255,255,0.04); }
+.pomRingLg { width: 220px; height: 220px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; transition: box-shadow 0.4s; }
+.pomRingLgInner { width: 172px; height: 172px; border-radius: 50%; background: var(--bg-layer); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem; }
+.pomTimeLg { font-size: 2.8rem; font-weight: 900; letter-spacing: -0.05em; color: var(--text-hero); font-variant-numeric: tabular-nums; }
+.pomModeLg { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+.pomStatusLg { font-size: 0.85rem; color: var(--text-body); margin-bottom: 1.5rem; }
+.pomCtrlsLg { display: flex; gap: 0.75rem; margin-bottom: 2.5rem; }
+.pomCtrlLg { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-soft); background: transparent; color: var(--text-body); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: all 0.15s; }
+.pomCtrlLg:hover { border-color: var(--line-mid); color: var(--text-hero); }
+.pomCtrlLgPrimary { width: 52px; height: 52px; border-radius: 50%; border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 0 20px currentColor; }
+.pomTaskInput { width: 360px; background: var(--bg-layer); border: 1px solid var(--line-soft); border-radius: var(--r-md); padding: 0.75rem 1.1rem; color: var(--text-hero); font-size: 0.875rem; outline: none; font-family: inherit; text-align: center; margin-bottom: 2rem; transition: border-color 0.15s; }
+.pomTaskInput:focus { border-color: var(--accent); }
+.pomTaskInput::placeholder { color: var(--text-dim); }
+.pomLog { width: 100%; max-width: 480px; }
+.pomLogTitle { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.75rem; text-align: center; }
+.pomLogItem { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--line-faint); font-size: 0.8rem; color: var(--text-body); }
+.pomLogItem:last-child { border-bottom: none; }
+.pomLogEmoji { font-size: 0.9rem; }
