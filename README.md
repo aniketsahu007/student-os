@@ -1,80 +1,35 @@
-<h1 align="center">
-  <br />
-  <img src="public/favicon.ico" alt="Student OS Logo" width="60" />
-  <br />
-  Student OS
-</h1>
+# Student OS
 
-<p align="center">
-  <strong>An AI-powered productivity dashboard built for students.</strong>
-  <br />
-  Manage your schedule, tasks, habits, budget, and notes — all in one place.
-</p>
+A personal productivity dashboard built for students. It brings together all the tools you need — tasks, notes, habits, budget, calendar, and more — into one clean interface with an AI command bar.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Next.js-16.2.6-black?logo=next.js&logoColor=white" alt="Next.js" />
-  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black" alt="React" />
-  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Clerk-Auth-6C47FF?logo=clerk&logoColor=white" alt="Clerk" />
-  <img src="https://img.shields.io/badge/Supabase-Database-3ECF8E?logo=supabase&logoColor=white" alt="Supabase" />
-  <img src="https://img.shields.io/badge/n8n-Automation-EA4B71?logo=n8n&logoColor=white" alt="n8n" />
-</p>
+## Features
 
----
+- **Dashboard** – Overview of everything at a glance
+- **Calendar** – View and manage your schedule
+- **To-Do** – Simple task management
+- **Reminders** – Set reminders so you don't forget things
+- **Notes** – Write and save notes in markdown
+- **Budget Tracker** – Track your income and expenses
+- **Habit Tracker** – Build daily/weekly habits and maintain streaks
+- **Pomodoro Timer** – Focus sessions using the Pomodoro technique
+- **AI Command Bar** – Type or speak natural language commands like:
+  - `"Add Maths every Monday 9am"`
+  - `"Log ₹150 for lunch today"`
+  - `"Remind me to submit assignment at 6pm"`
 
-## ✨ Features
+## Tech Stack
 
-| Module | Description |
-|---|---|
-| 🏠 **Dashboard** | Unified overview of all your productivity metrics |
-| 📅 **Calendar** | Visual schedule and event management |
-| ✅ **To-Do** | Task management with priorities |
-| 🔔 **Reminders** | Smart reminders so nothing slips through the cracks |
-| 📝 **Notes** | Markdown-powered notes editor |
-| 💰 **Budget Tracker** | Track income and expenses by category |
-| 🔥 **Habit Tracker** | Build streaks and track daily/weekly habits |
-| 🍅 **Pomodoro Timer** | Focus sessions with a built-in Pomodoro timer |
-| 🤖 **AI Command Bar** | Natural language commands via text **or voice** to control the entire app |
+- **Next.js 16** – App Router
+- **TypeScript**
+- **Clerk** – Authentication
+- **Supabase** – Database (PostgreSQL)
+- **n8n** – AI automation workflow (processes AI command bar requests)
+- **Framer Motion** – Animations
+- **Lucide React** – Icons
 
-### 🤖 AI Command Bar
+## Getting Started
 
-The AI Command Bar (`⌘K`) lets you control the entire dashboard using plain English — spoken or typed:
-
-- `"Add Maths every Monday 9am"`
-- `"Log ₹150 for lunch today"`
-- `"Remind me to submit assignment at 6pm"`
-- `"Mark Morning Run as done"`
-- `"What's on my schedule tomorrow?"`
-
-Commands are processed through an **n8n automation workflow**, making the AI pipeline fully customisable without touching application code.
-
----
-
-## 🏗️ Tech Stack
-
-| Layer | Technology |
-|---|---|
-| **Framework** | [Next.js 16](https://nextjs.org/) (App Router) |
-| **Language** | TypeScript 5 |
-| **Auth** | [Clerk](https://clerk.com/) |
-| **Database** | [Supabase](https://supabase.com/) (PostgreSQL + Row Level Security) |
-| **AI / Automation** | [n8n](https://n8n.io/) webhook workflow |
-| **Animations** | [Framer Motion](https://www.framer.com/motion/) |
-| **Icons** | [Lucide React](https://lucide.dev/) |
-| **Voice Input** | Web Speech API |
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Node.js** ≥ 18
-- A [Clerk](https://clerk.com/) account
-- A [Supabase](https://supabase.com/) project
-- An [n8n](https://n8n.io/) instance (cloud or self-hosted)
-
-### 1. Clone the repository
+### 1. Clone the repo
 
 ```bash
 git clone https://github.com/aniketsahu007/student-os.git
@@ -87,152 +42,61 @@ cd student-os
 npm install
 ```
 
-### 3. Configure environment variables
+### 3. Set up environment variables
 
-Copy the example file and fill in your credentials:
+Copy `.env.example` to `.env.local` and fill in your keys:
 
 ```bash
 cp .env.example .env.local
 ```
 
-```env
-# Clerk Auth
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-
-# n8n Automation
-NEXT_PUBLIC_N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook/...
-```
+You'll need:
+- Clerk API keys (from [clerk.com](https://clerk.com))
+- Supabase URL and keys (from [supabase.com](https://supabase.com))
+- n8n webhook URL (from your n8n instance)
 
 ### 4. Set up the database
 
-Run the SQL schema in your Supabase SQL editor to create all required tables and enable Row Level Security:
+Run the `database_schema.sql` file in your Supabase SQL editor. This creates the tables for users, budget, habits, and notes with Row Level Security enabled.
 
-```bash
-# Open database_schema.sql and execute it in your Supabase dashboard
-# SQL Editor → New Query → Paste contents → Run
-```
+### 5. Import n8n workflow
 
-Tables created:
-- `users` — mapped to Clerk user IDs
-- `budget_entries` — income / expense records
-- `habits` + `habit_logs` — habit definitions and daily completions
-- `notes` — markdown notes
+Import `n8n.json` into your n8n instance and activate it. Copy the webhook URL into `.env.local`.
 
-All tables are protected by **Row Level Security (RLS)** policies that scope data to the authenticated Clerk user.
-
-### 5. Configure n8n
-
-Import the included `n8n.json` workflow into your n8n instance:
-
-1. Open your n8n editor
-2. Go to **Workflows → Import from file**
-3. Select `n8n.json` from the project root
-4. Activate the workflow and copy the webhook URL into `.env.local`
-
-### 6. Start the development server
+### 6. Run the dev server
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000)
 
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
-student-os/
-├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── api/                # API route handlers
-│   │   ├── dashboard/          # Dashboard page
-│   │   ├── calendar/           # Calendar page
-│   │   ├── todos/              # To-Do page
-│   │   ├── reminders/          # Reminders page
-│   │   ├── notes/              # Notes page
-│   │   ├── budget/             # Budget tracker page
-│   │   ├── habits/             # Habit tracker page
-│   │   ├── pomodoro/           # Pomodoro timer page
-│   │   ├── layout.tsx          # Root layout (Clerk provider)
-│   │   ├── globals.css         # Global styles & design tokens
-│   │   └── dashboard.module.css
-│   ├── components/
-│   │   ├── AICommandBar.tsx    # ⌘K AI command bar with voice input
-│   │   ├── DashboardShell.tsx  # Main layout wrapper
-│   │   ├── PomodoroTimer.tsx   # Pomodoro focus timer
-│   │   └── Sidebar.tsx         # Navigation sidebar
-│   └── lib/                    # Shared utilities & Supabase client
-├── database_schema.sql         # Supabase schema + RLS policies
-├── n8n.json                    # n8n automation workflow
-├── .env.example                # Environment variable template
-└── next.config.ts
+src/
+├── app/
+│   ├── dashboard/
+│   ├── calendar/
+│   ├── todos/
+│   ├── reminders/
+│   ├── notes/
+│   ├── budget/
+│   ├── habits/
+│   └── pomodoro/
+├── components/
+│   ├── AICommandBar.tsx
+│   ├── Sidebar.tsx
+│   ├── PomodoroTimer.tsx
+│   └── DashboardShell.tsx
+└── lib/
+    └── supabase.ts
 ```
 
----
+## Scripts
 
-## 🔐 Authentication Flow
-
-Student OS uses **Clerk** for authentication. Clerk JWTs are forwarded to Supabase via a custom `requesting_user_id()` SQL function that extracts the Clerk `sub` claim, enabling Supabase RLS to enforce per-user data isolation without duplicating auth logic.
-
-```sql
--- Clerk JWT → Supabase RLS bridge
-CREATE OR REPLACE FUNCTION requesting_user_id()
-RETURNS TEXT AS $$
-  SELECT NULLIF(current_setting('request.jwt.claims', true)::json->>'sub', '')::text;
-$$ LANGUAGE SQL STABLE;
+```bash
+npm run dev      # Start dev server
+npm run build    # Build for production
+npm run lint     # Run linter
 ```
-
----
-
-## 📜 Available Scripts
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Start the development server |
-| `npm run build` | Build the production bundle |
-| `npm run start` | Start the production server |
-| `npm run lint` | Run ESLint |
-
----
-
-## 🌐 Deployment
-
-The easiest way to deploy Student OS is with [Vercel](https://vercel.com):
-
-1. Push your repo to GitHub
-2. Import it on [vercel.com/new](https://vercel.com/new)
-3. Add all environment variables from `.env.local` to the Vercel project settings
-4. Deploy — Vercel handles the rest
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please open an issue first to discuss what you'd like to change.
-
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/my-feature`
-3. Commit your changes: `git commit -m 'feat: add my feature'`
-4. Push to the branch: `git push origin feature/my-feature`
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
----
-
-<p align="center">
-  Built with ❤️ by <a href="https://github.com/aniketsahu007">Aniket Sahu</a>
-</p>
